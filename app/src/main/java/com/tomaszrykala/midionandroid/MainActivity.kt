@@ -11,10 +11,8 @@ import android.support.design.widget.Snackbar
 import android.support.v7.app.AppCompatActivity
 import android.view.Menu
 import android.view.View
-import android.widget.AdapterView
-import android.widget.LinearLayout
-import android.widget.SeekBar
-import android.widget.Spinner
+import android.widget.*
+import com.tomaszrykala.midionandroid.control.Keys
 import com.tomaszrykala.midionandroid.control.MidiButton
 import com.tomaszrykala.midionandroid.control.MidiEventListener
 import com.tomaszrykala.midionandroid.control.MidiPot
@@ -22,24 +20,80 @@ import com.tomaszrykala.midionandroid.midi.MidiController
 import com.tomaszrykala.midionandroid.midi.MidiEvent
 import com.tomaszrykala.midionandroid.midi.MidiEventType
 import com.tomaszrykala.midionandroid.ui.DeviceAdapter
+import com.triggertrap.seekarc.SeekArc
 import kotlinx.android.synthetic.main.appbar.*
 import kotlinx.android.synthetic.main.mixer_deck_0.*
 import kotlinx.android.synthetic.main.mixer_deck_1.*
 
 class MainActivity : AppCompatActivity() {
 
-    /**
-     * STANDARD
-     */
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
         setSupportActionBar(toolbar)
     }
 
-    /**
-     * MIDI-SPECIFIC
-     */
+    override fun onDestroy() {
+        midiController.removeObserver(deviceAdapter)
+        super.onDestroy()
+    }
+
+    // TODO MidiControlsManager
+    private val midiPots: MutableList<MidiPot> = mutableListOf()
+    private val midiButtons: MutableList<MidiButton> = mutableListOf()
+
+    abstract class MidiPotListener : SeekBar.OnSeekBarChangeListener, SeekArc.OnSeekArcChangeListener {
+        override fun onStartTrackingTouch(seekBar: SeekBar?) {}
+        override fun onStartTrackingTouch(p0: SeekArc?) {}
+        override fun onStopTrackingTouch(seekBar: SeekBar?) {}
+        override fun onStopTrackingTouch(p0: SeekArc?) {}
+    }
+
+    private fun initControls() {
+        // init controls and set the listener
+        // midiPots
+        val keys = Keys.Octave0.Key.values()
+        val seekArcs: List<SeekArc> = listOf(eq_lo, eq_mid, eq_hi, gain, filter)
+        seekArcs.forEachIndexed { index, seekArc ->
+            MidiPot(midiEventListener, 11, keys[index].pitch.toByte()).apply {
+                seekArc.setOnSeekArcChangeListener(object : MidiPotListener() {
+                    override fun onProgressChanged(seekBar: SeekBar?, progress: Int, fromUser: Boolean) {}
+                    override fun onProgressChanged(p0: SeekArc?, progress: Int, p2: Boolean) {
+                        onChange(progress)
+                    }
+                })
+                midiPots.add(this)
+            }
+        }
+        MidiPot(midiEventListener, 11, keys[seekArcs.size].pitch.toByte()).apply {
+            volume.setOnSeekBarChangeListener(
+                    object : SeekBar.OnSeekBarChangeListener {
+                        override fun onStartTrackingTouch(seekBar: SeekBar?) {} // no-op
+                        override fun onStopTrackingTouch(seekBar: SeekBar?) {} // no-op
+                        override fun onProgressChanged(seekBar: SeekBar?, progress: Int, fromUser: Boolean) {
+                            this@apply.onChange(progress)
+                        }
+                    })
+            midiPots.add(this)
+        }
+        // midiButtons
+        val buttons: List<ToggleButton> = listOf(fx_1, fx_2, play)
+        buttons.forEachIndexed { index, button ->
+            button.setOnCheckedChangeListener { _, isChecked ->
+                MidiButton(index.toByte()).apply {
+                    midiEventListener.onNote(this, isChecked)
+                    midiButtons.add(this)
+                }
+            }
+        }
+        cue.setOnClickListener {
+            MidiButton(buttons.size.toByte()).apply {
+                midiEventListener.onNote(this, true)
+                midiButtons.add(this)
+            }
+        }
+    }
+
     private var midiManager: MidiManager? = null
 
     private val deviceAdapter: DeviceAdapter by lazy {
@@ -85,6 +139,8 @@ class MainActivity : AppCompatActivity() {
     override fun onStop() {
         super.onStop()
         midiController.close()
+        midiButtons.clear()
+        midiPots.clear()
     }
 
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
@@ -114,23 +170,7 @@ class MainActivity : AppCompatActivity() {
             midiManager?.run {
                 midiController.observeDevices(this@MainActivity, deviceAdapter)
                 snack("Midi OK", Snackbar.LENGTH_LONG)
-
-                // init controls and set the listener
-                val midiButton = MidiButton(0)
-                val midiToggleButton = MidiButton(1)
-                val midiPot = MidiPot(midiEventListener, 11, 261.626.toByte()) // TODO C4
-
-                deckOneButtonCue.setOnClickListener { midiEventListener.onNote(midiButton, true) }
-                deckOneButtonStart.setOnCheckedChangeListener { _, isChecked -> midiEventListener.onNote(midiToggleButton, isChecked) }
-                deckOneVolume.setOnSeekBarChangeListener(
-                        object : SeekBar.OnSeekBarChangeListener {
-                            override fun onStartTrackingTouch(seekBar: SeekBar?) {} // no-op
-                            override fun onStopTrackingTouch(seekBar: SeekBar?) {} // no-op
-                            override fun onProgressChanged(seekBar: SeekBar?, progress: Int, fromUser: Boolean) {
-                                midiPot.onChange(progress)
-                            }
-                        }
-                )
+                initControls()
             }
         }
     }

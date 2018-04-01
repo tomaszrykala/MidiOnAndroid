@@ -20,14 +20,14 @@
         android:orientation="vertical">
 
         <com.triggertrap.seekarc.SeekArc
-            android:id="@+id/deckOneGain"
+            android:id="@+id/gain"
             android:layout_width="@dimen/seekArcSize"
             android:layout_height="@dimen/seekArcSize"
             android:layout_margin="@dimen/seekArcMargin"
             android:padding="@dimen/seekArcPadding"/>
 
         <com.triggertrap.seekarc.SeekArc
-            android:id="@+id/deckOneFilter"
+            android:id="@+id/filter"
             android:layout_width="@dimen/seekArcSize"
             android:layout_height="@dimen/seekArcSize"
             android:layout_margin="@dimen/seekArcMargin"
@@ -41,7 +41,7 @@
         android:background="@color/secondary_text">
 
         <SeekBar
-            android:id="@+id/deckOneVolume"
+            android:id="@+id/volume"
             style="@style/MidiControlVerticalSeekbar"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"

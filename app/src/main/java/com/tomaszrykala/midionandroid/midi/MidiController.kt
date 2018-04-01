@@ -46,6 +46,9 @@ class MidiController(
     fun observeDevices(lifecycleOwner: LifecycleOwner, observer: Observer<MutableList<MidiDeviceInfo>>) =
             midiDeviceMonitor.observe(lifecycleOwner, observer)
 
+    fun removeObserver(observer: Observer<MutableList<MidiDeviceInfo>>) =
+            midiDeviceMonitor.removeObserver(observer).also { close() }
+
     fun close() {
         midiInputPort?.close()
         midiInputPort = null
