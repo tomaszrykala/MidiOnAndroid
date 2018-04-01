@@ -2,4 +2,11 @@
     <string name="app_name">MIDI On Android</string>
     <string name="device_name">%1$s: %2$s</string>
     <string name="devices">Devices</string>
+
+    <string name="btn_toggle_start">start</string>
+    <string name="btn_toggle_stop">stop</string>
+    <string name="btn_section_fx">FX</string>
+    <string name="btn_cue">cue</string>
+    <string name="fx1">1</string>
+    <string name="fx2">2</string>
 </resources>

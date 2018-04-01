@@ -1,11 +1,13 @@
 <resources>
 
     <!-- Base application theme. -->
-    <style name="AppTheme" parent="Theme.AppCompat.Light.DarkActionBar">
+    <style name="AppTheme" parent="Theme.AppCompat.NoActionBar">
         <!-- Customize your theme here. -->
         <item name="colorPrimary">@color/colorPrimary</item>
         <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
         <item name="colorAccent">@color/colorAccent</item>
+
+        <item name="seekArcStyle">@style/MidiControlSeekArc</item>
     </style>
 
     <style name="AppTheme.NoActionBar">
@@ -17,4 +19,24 @@
 
     <style name="AppTheme.PopupOverlay" parent="ThemeOverlay.AppCompat.Light"/>
 
+    <!-- TODO module -->
+    <style name="MidiControlVerticalSeekbar" parent="Widget.AppCompat.SeekBar">
+        <item name="android:max">@integer/seekWidgetValueMax</item>
+        <item name="android:progress">@integer/seekWidgetValueMax</item>
+        <item name="android:rotation">270</item>
+    </style>
+
+    <style name="MidiControlSeekArc">
+        <item name="arcColor">@color/black_overlay_22</item>
+        <item name="arcWidth">4dp</item>
+        <item name="max">@integer/seekWidgetValueMax</item>
+        <item name="progress">64</item>
+        <item name="progressColor">?colorAccent</item>
+        <item name="progressWidth">4dp</item>
+        <item name="rotation">180</item>
+        <item name="startAngle">30</item>
+        <item name="sweepAngle">300</item>
+        <item name="thumb">?colorAccent</item>
+        <item name="touchInside">true</item>
+    </style>
 </resources>
