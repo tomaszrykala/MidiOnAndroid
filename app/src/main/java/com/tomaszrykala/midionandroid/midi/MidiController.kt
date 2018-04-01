@@ -21,13 +21,15 @@ class MidiController(
     private var midiDevice: MidiDevice? = null
 
     fun open(midiDeviceInfo: MidiDeviceInfo) =
-            midiDeviceInfo
-                    .ports.first { it.type == MidiDeviceInfo.PortInfo.TYPE_INPUT }
-                    .portNumber.also { portNumber ->
-                midiManager.openDevice(midiDeviceInfo, {
-                    midiDevice = it
-                    midiInputPort = it.openInputPort(portNumber)
-                }, Handler())
+            close().also {
+                midiDeviceInfo
+                        .ports.first { it.type == MidiDeviceInfo.PortInfo.TYPE_INPUT }
+                        .portNumber.also { portNumber ->
+                    midiManager.openDevice(midiDeviceInfo, {
+                        midiDevice = it
+                        midiInputPort = it.openInputPort(portNumber)
+                    }, Handler())
+                }
             }
 
     fun send(event: MidiEvent) {
@@ -38,11 +40,7 @@ class MidiController(
     fun observeDevices(lifecycleOwner: LifecycleOwner, observer: Observer<MutableList<MidiDeviceInfo>>) =
             midiDeviceMonitor.observe(lifecycleOwner, observer)
 
-    fun closeAll() {
-        close()
-    }
-
-    private fun close() {
+    fun close() {
         midiInputPort?.close()
         midiInputPort = null
         midiDevice?.close()

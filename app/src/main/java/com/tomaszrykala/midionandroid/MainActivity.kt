@@ -26,12 +26,23 @@ import kotlinx.android.synthetic.main.activity_main.*
 
 class MainActivity : AppCompatActivity() {
 
+    /**
+     * STANDARD
+     */
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        setContentView(R.layout.activity_main)
+        setSupportActionBar(toolbar)
+    }
+
+    /**
+     * MIDI-SPECIFIC
+     */
     private var midiManager: MidiManager? = null
 
     private val deviceAdapter: DeviceAdapter by lazy {
         DeviceAdapter(this, { it.inputPortCount > 0 })
     }
-
     @Suppress("UNCHECKED_CAST")
     private val midiController: MidiController by lazy {
         object : ViewModelProvider.Factory {
@@ -41,7 +52,6 @@ class MainActivity : AppCompatActivity() {
             ViewModelProviders.of(this, it).get(MidiController::class.java)
         }
     }
-
     private val midiEventListener: MidiEventListener by lazy {
         object : MidiEventListener {
             override fun onNoteOn(midiButton: MidiButton, pressed: Boolean) {
@@ -56,12 +66,6 @@ class MainActivity : AppCompatActivity() {
                         MidiEventType.STATUS_CONTROL_CHANGE, midiPot.midiChannel, midiPot.key, velocity))
             }
         }
-    }
-
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_main)
-        setSupportActionBar(toolbar)
     }
 
     override fun onStart() {
@@ -79,7 +83,7 @@ class MainActivity : AppCompatActivity() {
 
     override fun onStop() {
         super.onStop()
-        midiController.closeAll()
+        midiController.close()
     }
 
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
@@ -89,7 +93,7 @@ class MainActivity : AppCompatActivity() {
                 adapter = deviceAdapter
                 onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
                     override fun onNothingSelected(parent: AdapterView<*>?) {
-                        midiController.closeAll()
+                        midiController.close()
                     }
 
                     override fun onItemSelected(parent: AdapterView<*>?, view: View?, position: Int, id: Long) {
