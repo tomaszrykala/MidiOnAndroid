@@ -66,16 +66,16 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:textOff="1"
-            android:textOn="1"/>
+            android:textOff="@string/fx1"
+            android:textOn="@string/fx1"/>
 
         <ToggleButton
             android:id="@+id/deckOneFx2"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:textOff="2"
-            android:textOn="2"/>
+            android:textOff="@string/fx2"
+            android:textOn="@string/fx2"/>
     </LinearLayout>
 
     <LinearLayout

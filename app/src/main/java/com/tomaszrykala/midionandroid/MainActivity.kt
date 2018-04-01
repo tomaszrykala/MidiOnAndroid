@@ -49,23 +49,22 @@ class MainActivity : AppCompatActivity() {
     private val midiController: MidiController by lazy {
         object : ViewModelProvider.Factory {
             override fun <T : ViewModel> create(modelClass: Class<T>) =
-                    ({ MidiController(application) })() as T // unchecked cast
+                    ({ MidiController(application) })() as T
         }.let<ViewModelProvider.Factory, MidiController> {
             ViewModelProviders.of(this, it).get(MidiController::class.java)
         }
     }
     private val midiEventListener: MidiEventListener by lazy {
         object : MidiEventListener {
-            override fun onNoteOn(midiButton: MidiButton, pressed: Boolean) {
-                if (pressed) {
-                    midiController.send(MidiEvent(
-                            MidiEventType.STATUS_NOTE_ON, midiButton.midiChannel, midiButton.key, midiButton.velocity))
-                } // else STATUS_NOTE_OFF ??
+            override fun onNote(midiButton: MidiButton, pressed: Boolean) {
+                midiController.send(
+                        MidiEvent(if (pressed) MidiEventType.STATUS_NOTE_ON else MidiEventType.STATUS_NOTE_OFF,
+                                midiButton.midiChannel, midiButton.key, midiButton.velocity))
             }
 
             override fun onControlChange(midiPot: MidiPot, velocity: Byte) {
-                midiController.send(MidiEvent(
-                        MidiEventType.STATUS_CONTROL_CHANGE, midiPot.midiChannel, midiPot.key, velocity))
+                midiController.send(
+                        MidiEvent(MidiEventType.STATUS_CONTROL_CHANGE, midiPot.midiChannel, midiPot.key, velocity))
             }
         }
     }
@@ -118,9 +117,11 @@ class MainActivity : AppCompatActivity() {
 
                 // init controls and set the listener
                 val midiButton = MidiButton(0)
+                val midiToggleButton = MidiButton(1)
                 val midiPot = MidiPot(midiEventListener, 11, 261.626.toByte()) // TODO C4
 
-                deckOneButtonCue.setOnClickListener { midiEventListener.onNoteOn(midiButton, true) }
+                deckOneButtonCue.setOnClickListener { midiEventListener.onNote(midiButton, true) }
+                deckOneButtonStart.setOnCheckedChangeListener { _, isChecked -> midiEventListener.onNote(midiToggleButton, isChecked) }
                 deckOneVolume.setOnSeekBarChangeListener(
                         object : SeekBar.OnSeekBarChangeListener {
                             override fun onStartTrackingTouch(seekBar: SeekBar?) {} // no-op
