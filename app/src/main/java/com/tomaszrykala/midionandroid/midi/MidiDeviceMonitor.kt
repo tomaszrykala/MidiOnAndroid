@@ -19,16 +19,12 @@ class MidiDeviceMonitor internal constructor(
 
     override fun onActive() {
         super.onActive()
-        midiManager.registerDeviceCallback(deviceCallback, handler)
-        // data.addAll(midiManager.devices)
         data.value = mutableListOf(*midiManager.devices)
-        midiManager.registerDeviceCallback(
-                deviceCallback, handler)
+        midiManager.registerDeviceCallback(deviceCallback, handler)
     }
 
     override fun onInactive() {
         midiManager.unregisterDeviceCallback(deviceCallback)
-        // data.clear()
         data.value?.clear()
         super.onInactive()
     }

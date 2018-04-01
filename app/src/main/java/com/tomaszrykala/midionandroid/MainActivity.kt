@@ -10,7 +10,6 @@ import android.os.Bundle
 import android.support.constraint.ConstraintLayout
 import android.support.design.widget.Snackbar
 import android.support.v7.app.AppCompatActivity
-import android.view.KeyEvent
 import android.view.Menu
 import android.view.View
 import android.widget.AdapterView
@@ -19,8 +18,8 @@ import android.widget.Spinner
 import com.tomaszrykala.midionandroid.control.MidiButton
 import com.tomaszrykala.midionandroid.control.MidiEventListener
 import com.tomaszrykala.midionandroid.control.MidiPot
-import com.tomaszrykala.midionandroid.event.MidiEvent
-import com.tomaszrykala.midionandroid.event.MidiEventType
+import com.tomaszrykala.midionandroid.midi.MidiEvent
+import com.tomaszrykala.midionandroid.midi.MidiEventType
 import com.tomaszrykala.midionandroid.midi.MidiController
 import com.tomaszrykala.midionandroid.ui.DeviceAdapter
 import kotlinx.android.synthetic.main.activity_main.*
@@ -47,14 +46,14 @@ class MainActivity : AppCompatActivity() {
         object : MidiEventListener {
             override fun onNoteOn(midiButton: MidiButton, pressed: Boolean) {
                 if (pressed) {
-                    midiController.send(MidiEvent(MidiEventType.STATUS_NOTE_ON, midiButton.midiChannel, midiButton.key, midiButton.velocity))
-//                    midiController.send(byteArrayOf((MidiEventType.STATUS_NOTE_ON.byte + midiButton.midiChannel).toByte(), midiButton.key, midiButton.velocity))
+                    midiController.send(MidiEvent(
+                            MidiEventType.STATUS_NOTE_ON, midiButton.midiChannel, midiButton.key, midiButton.velocity))
                 } // else STATUS_NOTE_OFF ??
             }
 
             override fun onControlChange(midiPot: MidiPot, velocity: Byte) {
-                midiController.send(MidiEvent(MidiEventType.STATUS_CONTROL_CHANGE, midiPot.midiChannel, midiPot.key, velocity))
-//                midiController.send(byteArrayOf((MidiEventType.STATUS_CONTROL_CHANGE.byte + midiPot.midiChannel).toByte(), midiPot.key, velocity))
+                midiController.send(MidiEvent(
+                        MidiEventType.STATUS_CONTROL_CHANGE, midiPot.midiChannel, midiPot.key, velocity))
             }
         }
     }
@@ -76,6 +75,11 @@ class MainActivity : AppCompatActivity() {
                 }
             }
         }
+    }
+
+    override fun onStop() {
+        super.onStop()
+        midiController.closeAll()
     }
 
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
@@ -107,8 +111,8 @@ class MainActivity : AppCompatActivity() {
                 snack("Midi OK", Snackbar.LENGTH_LONG)
 
                 // init controls and set the listener
-                val midiButton = MidiButton(KeyEvent.KEYCODE_0, 0) // TODO KEYCODE not required
-                val midiPot = MidiPot(midiEventListener, 11, 261.626.toByte()) // C4
+                val midiButton = MidiButton(0)
+                val midiPot = MidiPot(midiEventListener, 11, 261.626.toByte()) // TODO C4
 
                 button.setOnClickListener { midiEventListener.onNoteOn(midiButton, true) }
                 seek_bar.setOnSeekBarChangeListener(

@@ -1,4 +1,6 @@
-package com.tomaszrykala.midionandroid.event
+package com.tomaszrykala.midionandroid.midi
+
+data class MidiEvent(val type: MidiEventType, val channel: Byte, val note: Byte, val pressure: Byte)
 
 enum class MidiEventType(val byte: Byte) {
 

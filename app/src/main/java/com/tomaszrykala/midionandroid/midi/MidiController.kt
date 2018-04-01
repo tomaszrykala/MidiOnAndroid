@@ -10,7 +10,6 @@ import android.media.midi.MidiDeviceInfo
 import android.media.midi.MidiInputPort
 import android.media.midi.MidiManager
 import android.os.Handler
-import com.tomaszrykala.midionandroid.event.MidiEvent
 
 class MidiController(
         context: Context,
@@ -36,21 +35,17 @@ class MidiController(
                 .apply { midiInputPort?.send(this, 0, size) }
     }
 
-//    fun send(msg: ByteArray) {
-//        midiInputPort?.send(msg, 0, msg.size)
-//    }
+    fun observeDevices(lifecycleOwner: LifecycleOwner, observer: Observer<MutableList<MidiDeviceInfo>>) =
+            midiDeviceMonitor.observe(lifecycleOwner, observer)
+
+    fun closeAll() {
+        close()
+    }
 
     private fun close() {
         midiInputPort?.close()
         midiInputPort = null
         midiDevice?.close()
         midiDevice = null
-    }
-
-    fun observeDevices(lifecycleOwner: LifecycleOwner, observer: Observer<MutableList<MidiDeviceInfo>>) =
-            midiDeviceMonitor.observe(lifecycleOwner, observer)
-
-    fun closeAll() {
-        //NO-OP yet
     }
 }
