@@ -7,22 +7,24 @@ import android.content.Context
 import android.content.pm.PackageManager
 import android.media.midi.MidiManager
 import android.os.Bundle
-import android.support.constraint.ConstraintLayout
 import android.support.design.widget.Snackbar
 import android.support.v7.app.AppCompatActivity
 import android.view.Menu
 import android.view.View
 import android.widget.AdapterView
+import android.widget.LinearLayout
 import android.widget.SeekBar
 import android.widget.Spinner
 import com.tomaszrykala.midionandroid.control.MidiButton
 import com.tomaszrykala.midionandroid.control.MidiEventListener
 import com.tomaszrykala.midionandroid.control.MidiPot
+import com.tomaszrykala.midionandroid.midi.MidiController
 import com.tomaszrykala.midionandroid.midi.MidiEvent
 import com.tomaszrykala.midionandroid.midi.MidiEventType
-import com.tomaszrykala.midionandroid.midi.MidiController
 import com.tomaszrykala.midionandroid.ui.DeviceAdapter
 import kotlinx.android.synthetic.main.activity_main.*
+import kotlinx.android.synthetic.main.deck_one_gain_and_filter.*
+import kotlinx.android.synthetic.main.deck_one_mixer_eqs.*
 
 class MainActivity : AppCompatActivity() {
 
@@ -118,8 +120,8 @@ class MainActivity : AppCompatActivity() {
                 val midiButton = MidiButton(0)
                 val midiPot = MidiPot(midiEventListener, 11, 261.626.toByte()) // TODO C4
 
-                button.setOnClickListener { midiEventListener.onNoteOn(midiButton, true) }
-                seek_bar.setOnSeekBarChangeListener(
+                deckOneButtonCue.setOnClickListener { midiEventListener.onNoteOn(midiButton, true) }
+                deckOneVolume.setOnSeekBarChangeListener(
                         object : SeekBar.OnSeekBarChangeListener {
                             override fun onStartTrackingTouch(seekBar: SeekBar?) {} // no-op
                             override fun onStopTrackingTouch(seekBar: SeekBar?) {} // no-op
@@ -138,7 +140,7 @@ class MainActivity : AppCompatActivity() {
 
     private fun snack(text: String, length: Int) {
         applicationContext?.run {
-            findViewById<ConstraintLayout>(R.id.rootView)?.run {
+            findViewById<LinearLayout>(R.id.rootView)?.run {
                 Snackbar.make(this, text, length).show()
             }
         }

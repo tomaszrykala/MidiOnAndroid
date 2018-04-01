@@ -1,0 +1,106 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="0dp"
+    android:layout_height="match_parent"
+    android:layout_weight=".25"
+    android:orientation="vertical"
+    android:paddingBottom="8dp"
+    android:paddingEnd="0dp"
+    android:paddingStart="8dp"
+    android:paddingTop="8dp"
+    tools:background="@android:color/holo_blue_dark"
+    tools:showIn="@layout/mixer">
+
+    <LinearLayout
+        android:id="@+id/deckOneEqs"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/secondary_text"
+        android:gravity="center_horizontal"
+        android:orientation="vertical">
+
+        <com.triggertrap.seekarc.SeekArc
+            android:id="@+id/deckOneEqHi"
+            android:layout_width="@dimen/seekArcSize"
+            android:layout_height="@dimen/seekArcSize"
+            android:layout_margin="@dimen/seekArcMargin"
+            android:padding="@dimen/seekArcPadding"/>
+
+        <com.triggertrap.seekarc.SeekArc
+            android:id="@+id/deckOneEqMid"
+            android:layout_width="@dimen/seekArcSize"
+            android:layout_height="@dimen/seekArcSize"
+            android:layout_margin="@dimen/seekArcMargin"
+            android:padding="@dimen/seekArcPadding"/>
+
+        <com.triggertrap.seekarc.SeekArc
+            android:id="@+id/deckOneEqLo"
+            android:layout_width="@dimen/seekArcSize"
+            android:layout_height="@dimen/seekArcSize"
+            android:layout_margin="@dimen/seekArcMargin"
+            android:padding="@dimen/seekArcPadding"/>
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
+        android:background="@color/secondary_text"
+        android:orientation="horizontal"
+        android:padding="8dp"
+        android:weightSum="3">
+
+        <TextView
+            style="@style/Base.TextAppearance.Widget.AppCompat.Toolbar.Title"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:layout_marginStart="4dp"
+            android:layout_weight="1"
+            android:text="@string/btn_section_fx"/>
+
+        <ToggleButton
+            android:id="@+id/deckOneFx1"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:textOff="1"
+            android:textOn="1"/>
+
+        <ToggleButton
+            android:id="@+id/deckOneFx2"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:textOff="2"
+            android:textOn="2"/>
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
+        android:background="@color/secondary_text"
+        android:gravity="bottom"
+        android:orientation="horizontal"
+        android:padding="4dp">
+
+        <ToggleButton
+            android:id="@+id/deckOneButtonStart"
+            android:layout_width="0dp"
+            android:layout_height="?actionBarSize"
+            android:layout_weight="0.5"
+            android:textOff="@string/btn_toggle_stop"
+            android:textOn="@string/btn_toggle_start"/>
+
+        <Button
+            android:id="@+id/deckOneButtonCue"
+            android:layout_width="0dp"
+            android:layout_height="?actionBarSize"
+            android:layout_weight="0.5"
+            android:minHeight="?actionBarSize"
+            android:text="@string/btn_cue"/>
+    </LinearLayout>
+</LinearLayout>

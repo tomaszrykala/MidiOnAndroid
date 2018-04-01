@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <dimen name="seekArcSize">112dp</dimen>
+    <dimen name="seekArcMargin">8dp</dimen>
+    <dimen name="seekArcPadding">16dp</dimen>
+</resources>
