@@ -10,7 +10,6 @@
     android:paddingEnd="0dp"
     android:paddingStart="8dp"
     android:paddingTop="8dp"
-    tools:background="@android:color/holo_green_dark"
     tools:showIn="@layout/mixer">
 
     <LinearLayout

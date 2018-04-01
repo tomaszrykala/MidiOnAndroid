@@ -7,11 +7,8 @@
     android:paddingEnd="8dp"
     android:paddingStart="0dp">
 
-    <include
-        android:id="@+id/deck_one_mixer_eqs"
-        layout="@layout/deck_one_mixer_eqs"/>
+    <include layout="@layout/mixer_deck_0"/>
 
-    <include
-        android:id="@+id/deck_one_gain_and_filter"
-        layout="@layout/deck_one_gain_and_filter"/>
+    <include layout="@layout/mixer_deck_1"/>
+
 </LinearLayout>

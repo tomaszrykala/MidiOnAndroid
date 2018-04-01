@@ -22,9 +22,9 @@ import com.tomaszrykala.midionandroid.midi.MidiController
 import com.tomaszrykala.midionandroid.midi.MidiEvent
 import com.tomaszrykala.midionandroid.midi.MidiEventType
 import com.tomaszrykala.midionandroid.ui.DeviceAdapter
-import kotlinx.android.synthetic.main.activity_main.*
-import kotlinx.android.synthetic.main.deck_one_gain_and_filter.*
-import kotlinx.android.synthetic.main.deck_one_mixer_eqs.*
+import kotlinx.android.synthetic.main.appbar.*
+import kotlinx.android.synthetic.main.mixer_deck_0.*
+import kotlinx.android.synthetic.main.mixer_deck_1.*
 
 class MainActivity : AppCompatActivity() {
 
