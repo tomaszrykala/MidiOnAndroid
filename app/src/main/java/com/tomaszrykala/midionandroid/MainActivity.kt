@@ -46,20 +46,17 @@ class MainActivity : AppCompatActivity() {
         setSupportActionBar(toolbar)
     }
 
-    override fun onDestroy() {
-        midiController.removeObserver(deviceAdapter)
-        super.onDestroy()
-    }
-
     override fun onStart() {
         super.onStart()
         applicationContext?.let {
             it.packageManager?.let {
                 if (it.hasSystemFeature(PackageManager.FEATURE_MIDI)) {
-                    openMidi()
-                } else {
-                    showNoMidiError()
-                }
+                    midiManager = getSystemService(Context.MIDI_SERVICE) as MidiManager?
+                    midiManager?.run {
+                        openMidiControls()
+                        observeDevices()
+                    }
+                } else showNoMidiError()
             }
         }
     }
@@ -68,6 +65,23 @@ class MainActivity : AppCompatActivity() {
         super.onStop()
         midiController.close()
         midiControlsManager.close()
+        midiController.removeObserver(deviceAdapter)
+    }
+
+    private fun openMidiControls() {
+        midiControlsManager.open(
+                listOf(fx_1, fx_2, play), listOf(cue),
+                listOf(eq_lo, eq_mid, eq_hi, gain, filter), listOf(volume))
+    }
+
+    private fun observeDevices() {
+        midiController.observeDevices(this, deviceAdapter)
+    }
+
+    private fun showNoMidiError() {
+        findViewById<LinearLayout>(R.id.rootView)?.run {
+            Snackbar.make(this, "No MIDI Support.", Snackbar.LENGTH_INDEFINITE).show()
+        }
     }
 
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
@@ -89,33 +103,5 @@ class MainActivity : AppCompatActivity() {
             }
         }
         return true
-    }
-
-    private fun openMidi() {
-        applicationContext?.run {
-            midiManager = getSystemService(Context.MIDI_SERVICE) as MidiManager?
-            midiManager?.run {
-                openMidiControls()
-                midiController.observeDevices(this@MainActivity, deviceAdapter)
-            }
-        }
-    }
-
-    private fun openMidiControls() {
-        midiControlsManager.open(
-                listOf(fx_1, fx_2, play), listOf(cue),
-                listOf(eq_lo, eq_mid, eq_hi, gain, filter), listOf(volume))
-    }
-
-    private fun showNoMidiError() {
-        snack("No MIDI Support.", Snackbar.LENGTH_INDEFINITE)
-    }
-
-    private fun snack(text: String, length: Int) {
-        applicationContext?.run {
-            findViewById<LinearLayout>(R.id.rootView)?.run {
-                Snackbar.make(this, text, length).show()
-            }
-        }
     }
 }
