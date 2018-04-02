@@ -3,8 +3,6 @@
     <color name="colorPrimary">#607D8B</color>
     <color name="colorPrimaryDark">#455A64</color>
     <color name="colorAccent">#FFC107</color>
-
-    <!-- TODO module -->
     <color name="secondary_text">#727272</color>
     <color name="black_overlay_22">#22000000</color>
 </resources>

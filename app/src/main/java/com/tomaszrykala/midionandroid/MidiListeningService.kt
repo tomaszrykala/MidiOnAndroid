@@ -37,8 +37,8 @@ class MidiListeningService : MidiDeviceService() {
 
         override fun onSend(msg: ByteArray?, offset: Int, count: Int, timestamp: Long) {
             msg?.run {
-                midiEventTypes[msg[offset + 0]]?.run {
-                    Log.d(TAG, MidiEvent(this, msg[offset + 1], msg[offset + 2], msg[offset + 3]).toString())
+                midiEventTypes[(msg[1] - msg[4]).toByte()]?.run {
+                    Log.d(TAG, MidiEvent(this, msg[4], msg[2], msg[3]).toString())
                 }
             }
         }

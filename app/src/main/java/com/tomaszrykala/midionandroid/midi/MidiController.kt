@@ -39,7 +39,7 @@ class MidiController(
 
     fun send(event: MidiEvent) {
         Log.d(TAG, event.toString())
-        byteArrayOf(event.type.byte, event.channel, event.note, event.pressure)
+        byteArrayOf((event.type.byte + event.channel).toByte(), event.note, event.pressure, event.channel)
                 .apply { midiInputPort?.send(this, 0, size) }
     }
 
