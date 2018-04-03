@@ -16,6 +16,7 @@ import android.widget.LinearLayout
 import android.widget.Spinner
 import com.tomaszrykala.midionandroid.midi.MidiController
 import com.tomaszrykala.midionandroid.ui.DeviceAdapter
+import com.triggertrap.seekarc.SeekArc
 import kotlinx.android.synthetic.main.appbar.*
 import kotlinx.android.synthetic.main.mixer_deck_0.*
 import kotlinx.android.synthetic.main.mixer_deck_1.*
@@ -69,9 +70,7 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun openMidiControls() {
-        midiControlsManager.open(
-                listOf(fx_1, fx_2, play), listOf(cue),
-                listOf(eq_lo, eq_mid, eq_hi, gain, filter), listOf(volume))
+        midiControlsManager.open(listOf(fx_1, fx_2, play), listOf(cue), seekArcList(), listOf(volume))
     }
 
     private fun observeDevices() {
@@ -82,6 +81,10 @@ class MainActivity : AppCompatActivity() {
         findViewById<LinearLayout>(R.id.rootView)?.run {
             Snackbar.make(this, "No MIDI Support.", Snackbar.LENGTH_INDEFINITE).show()
         }
+    }
+
+    private fun seekArcList(): List<SeekArc> {
+        return listOf(eq_lo, eq_mid, eq_hi, gain, filter)
     }
 
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
@@ -103,5 +106,21 @@ class MainActivity : AppCompatActivity() {
             }
         }
         return true
+    }
+
+    companion object {
+        const val seekArcsProgressKey = "seekArcsProgress"
+    }
+
+    override fun onSaveInstanceState(state: Bundle?) {
+        state?.putIntArray(seekArcsProgressKey, seekArcList().map { it.progress }.toIntArray())
+        super.onSaveInstanceState(state)
+    }
+
+    override fun onRestoreInstanceState(state: Bundle?) {
+        state?.getIntArray(seekArcsProgressKey)?.run {
+            seekArcList().forEachIndexed { index, seekArc -> seekArc.progress = this[index] }
+            super.onRestoreInstanceState(state)
+        }
     }
 }
