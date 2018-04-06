@@ -45,10 +45,7 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
         setSupportActionBar(toolbar)
-    }
 
-    override fun onStart() {
-        super.onStart()
         applicationContext?.let {
             it.packageManager?.let {
                 if (it.hasSystemFeature(PackageManager.FEATURE_MIDI)) {
@@ -62,11 +59,10 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
-    override fun onStop() {
-        super.onStop()
-        midiController.close()
-        midiControlsManager.close()
+    override fun onDestroy() {
         midiController.removeObserver(deviceAdapter)
+        midiControlsManager.close()
+        super.onDestroy()
     }
 
     private fun openMidiControls() {
