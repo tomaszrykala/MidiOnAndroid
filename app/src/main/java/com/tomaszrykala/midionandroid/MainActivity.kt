@@ -24,6 +24,7 @@ import kotlinx.android.synthetic.main.mixer_deck_1.*
 class MainActivity : AppCompatActivity() {
 
     private var midiManager: MidiManager? = null
+    private var adapterPosition: Int = 0
     private val deviceAdapter: DeviceAdapter by lazy {
         DeviceAdapter(this, { it.inputPortCount > 0 })
     }
@@ -88,6 +89,7 @@ class MainActivity : AppCompatActivity() {
         menu?.findItem(R.id.app_bar_selector)?.actionView?.apply {
             findViewById<Spinner>(R.id.output_selector)?.apply {
                 adapter = deviceAdapter
+                setSelection(adapterPosition)
                 onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
                     override fun onNothingSelected(parent: AdapterView<*>?) {
                         midiController.close()
@@ -96,6 +98,7 @@ class MainActivity : AppCompatActivity() {
                     override fun onItemSelected(parent: AdapterView<*>?, view: View?, position: Int, id: Long) {
                         deviceAdapter[position].apply {
                             midiController.open(this)
+                            adapterPosition = position
                         }
                     }
                 }
@@ -106,17 +109,24 @@ class MainActivity : AppCompatActivity() {
 
     companion object {
         const val seekArcsProgressKey = "seekArcsProgress"
+        const val adapterPositionKey = "adapterPosition"
     }
 
     override fun onSaveInstanceState(state: Bundle?) {
-        state?.putIntArray(seekArcsProgressKey, seekArcList().map { it.progress }.toIntArray())
+        state?.run {
+            putIntArray(seekArcsProgressKey, seekArcList().map { it.progress }.toIntArray())
+            putInt(adapterPositionKey, adapterPosition)
+        }
         super.onSaveInstanceState(state)
     }
 
     override fun onRestoreInstanceState(state: Bundle?) {
-        state?.getIntArray(seekArcsProgressKey)?.run {
-            seekArcList().forEachIndexed { index, seekArc -> seekArc.progress = this[index] }
-            super.onRestoreInstanceState(state)
+        state?.run {
+            getIntArray(seekArcsProgressKey)?.run {
+                seekArcList().forEachIndexed { index, seekArc -> seekArc.progress = this[index] }
+            }
+            adapterPosition = getInt(adapterPositionKey)
         }
+        super.onRestoreInstanceState(state)
     }
 }
