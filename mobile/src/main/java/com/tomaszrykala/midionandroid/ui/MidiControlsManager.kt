@@ -1,15 +1,15 @@
-package com.tomaszrykala.midionandroid
+package com.tomaszrykala.midionandroid.ui
 
 import android.widget.Button
 import android.widget.SeekBar
 import android.widget.ToggleButton
+import com.tomaszrykala.midi.MidiEvent
+import com.tomaszrykala.midi.MidiEventType
 import com.tomaszrykala.midionandroid.control.Keys
 import com.tomaszrykala.midionandroid.control.MidiButton
 import com.tomaszrykala.midionandroid.control.MidiEventListener
 import com.tomaszrykala.midionandroid.control.MidiPot
 import com.tomaszrykala.midionandroid.midi.MidiController
-import com.tomaszrykala.midionandroid.midi.MidiEvent
-import com.tomaszrykala.midionandroid.midi.MidiEventType
 import com.triggertrap.seekarc.SeekArc
 
 class MidiControlsManager(val midiController: MidiController) {
@@ -34,8 +34,8 @@ class MidiControlsManager(val midiController: MidiController) {
     }
 
     fun open(toggleButtons: List<ToggleButton>, buttons: List<Button>, seekArcs: List<SeekArc>, seekBars: List<SeekBar>) {
-        initMidiPots(seekArcs, seekBars)
         initMidiButtons(toggleButtons, buttons)
+        initMidiPots(seekArcs, seekBars)
     }
 
     fun close() {

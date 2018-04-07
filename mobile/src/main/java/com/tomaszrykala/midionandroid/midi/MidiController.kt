@@ -11,6 +11,7 @@ import android.media.midi.MidiInputPort
 import android.media.midi.MidiManager
 import android.os.Handler
 import android.util.Log
+import com.tomaszrykala.midi.MidiEvent
 
 class MidiController(
         context: Context,

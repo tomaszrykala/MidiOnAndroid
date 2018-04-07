@@ -16,6 +16,7 @@ import android.widget.LinearLayout
 import android.widget.Spinner
 import com.tomaszrykala.midionandroid.midi.MidiController
 import com.tomaszrykala.midionandroid.ui.DeviceAdapter
+import com.tomaszrykala.midionandroid.ui.MidiControlsManager
 import com.triggertrap.seekarc.SeekArc
 import kotlinx.android.synthetic.main.appbar.*
 import kotlinx.android.synthetic.main.mixer_deck_0.*

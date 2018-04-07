@@ -25,7 +25,7 @@
         </activity>
 
         <service
-            android:name=".MidiListeningService"
+            android:name=".midi.MidiListeningService"
             android:permission="android.permission.BIND_MIDI_DEVICE_SERVICE">
             <intent-filter>
                 <action android:name="android.media.midi.MidiDeviceService"/>

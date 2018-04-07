@@ -1,4 +1,4 @@
-package com.tomaszrykala.midionandroid.midi
+package com.tomaszrykala.midi
 
 data class MidiEvent(val type: MidiEventType, val channel: Byte, val note: Byte, val pressure: Byte)
 

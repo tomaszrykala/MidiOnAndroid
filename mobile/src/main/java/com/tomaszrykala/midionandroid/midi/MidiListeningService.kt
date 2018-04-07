@@ -1,11 +1,11 @@
-package com.tomaszrykala.midionandroid
+package com.tomaszrykala.midionandroid.midi
 
 import android.media.midi.MidiDeviceService
 import android.media.midi.MidiDeviceStatus
 import android.media.midi.MidiReceiver
 import android.util.Log
-import com.tomaszrykala.midionandroid.midi.MidiEvent
-import com.tomaszrykala.midionandroid.midi.MidiEventType
+import com.tomaszrykala.midi.MidiEvent
+import com.tomaszrykala.midi.MidiEventType
 
 class MidiListeningService : MidiDeviceService() {
 
