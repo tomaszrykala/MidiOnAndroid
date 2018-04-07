@@ -13,10 +13,16 @@ import com.tomaszrykala.midionandroid.control.MidiButton
 import com.tomaszrykala.midionandroid.control.MidiEventListener
 import com.tomaszrykala.midionandroid.control.MidiPot
 
-class MidiController(
-        context: Context,
-        private val midiManager: MidiManager = context.getSystemService(Context.MIDI_SERVICE) as MidiManager)
+class MidiController(context: Context,
+                     private val midiManager: MidiManager = context.getSystemService(Context.MIDI_SERVICE) as MidiManager)
     : MidiEventListener {
+
+    companion object {
+        const val TAG: String = "MidiController"
+    }
+
+    private var midiInputPort: MidiInputPort? = null
+    private var midiDevice: MidiDevice? = null
 
     override fun onNote(midiButton: MidiButton, pressed: Boolean) {
         send(MidiEvent(
@@ -28,16 +34,12 @@ class MidiController(
     override fun onControlChange(midiPot: MidiPot, velocity: Byte) {
         send(MidiEvent(MidiEventType.STATUS_CONTROL_CHANGE, midiPot.midiChannel, midiPot.key, velocity))
     }
-//        private val midiDeviceMonitor: MidiDeviceMonitor = MidiDeviceMonitor(context, midiManager)
-//) : AndroidViewModel(context.applicationContext as Application) {
 
-
-    companion object {
-        const val TAG: String = "MidiController"
+    private fun send(event: MidiEvent) {
+        Log.d(TAG, event.toString())
+        byteArrayOf((event.type.byte + event.channel).toByte(), event.note, event.pressure, event.channel)
+                .apply { midiInputPort?.send(this, 0, size) }
     }
-
-    private var midiInputPort: MidiInputPort? = null
-    private var midiDevice: MidiDevice? = null
 
     fun open(midiDeviceInfo: MidiDeviceInfo) =
             close().also {
@@ -50,18 +52,6 @@ class MidiController(
                     }, Handler())
                 }
             }
-
-    fun send(event: MidiEvent) {
-        Log.d(TAG, event.toString())
-        byteArrayOf((event.type.byte + event.channel).toByte(), event.note, event.pressure, event.channel)
-                .apply { midiInputPort?.send(this, 0, size) }
-    }
-
-//    fun observeDevices(lifecycleOwner: LifecycleOwner, observer: Observer<List<MidiDeviceInfo>>) =
-//            midiDeviceMonitor.observe(lifecycleOwner, observer)
-//
-//    fun removeObserver(observer: Observer<List<MidiDeviceInfo>>) =
-//            midiDeviceMonitor.removeObserver(observer).also { close() }
 
     fun close() {
         midiInputPort?.close()
