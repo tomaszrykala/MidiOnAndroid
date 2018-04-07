@@ -13,7 +13,7 @@ class DeviceAdapter(private val context: Context,
                     private val adapter: ArrayAdapter<String> =
                             ArrayAdapter(context, android.R.layout.simple_spinner_item, mutableListOf())) :
         SpinnerAdapter by adapter,
-        Observer<MutableList<MidiDeviceInfo>> {
+        Observer<List<MidiDeviceInfo>> {
 
     init {
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
@@ -21,7 +21,7 @@ class DeviceAdapter(private val context: Context,
 
     operator fun get(index: Int) = items[index]
 
-    override fun onChanged(updatedItems: MutableList<MidiDeviceInfo>?) {
+    override fun onChanged(updatedItems: List<MidiDeviceInfo>?) {
         with(items) {
             clear()
             updatedItems?.also {

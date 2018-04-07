@@ -2,39 +2,39 @@ package com.tomaszrykala.midionandroid.midi
 
 import android.arch.lifecycle.LifecycleOwner
 import android.arch.lifecycle.MediatorLiveData
-import android.arch.lifecycle.MutableLiveData
 import android.arch.lifecycle.Observer
 import android.content.Context
 import android.media.midi.MidiDeviceInfo
 import android.media.midi.MidiManager
 import android.media.midi.MidiManager.DeviceCallback
 import android.os.Handler
+import com.tomaszrykala.midionandroid.data.MutableListLiveData
 
 class MidiDeviceMonitor internal constructor(
         context: Context,
         private val midiManager: MidiManager,
         private val handler: Handler = Handler(context.mainLooper),
-        private val data: MutableLiveData<MutableList<MidiDeviceInfo>> = MutableLiveData()
-) : MediatorLiveData<MutableList<MidiDeviceInfo>>() {
+        private val data: MutableListLiveData<MidiDeviceInfo> = MutableListLiveData()
+) : MediatorLiveData<List<MidiDeviceInfo>>() {
 
     override fun onActive() {
         super.onActive()
-        data.value = mutableListOf(*midiManager.devices)
         midiManager.registerDeviceCallback(deviceCallback, handler)
+        data.addAll(midiManager.devices)
     }
 
     override fun onInactive() {
         midiManager.unregisterDeviceCallback(deviceCallback)
-        data.value?.clear()
+        data.clear()
         super.onInactive()
     }
 
-    override fun observe(owner: LifecycleOwner, observer: Observer<MutableList<MidiDeviceInfo>>) {
+    override fun observe(owner: LifecycleOwner, observer: Observer<List<MidiDeviceInfo>>) {
         super.observe(owner, observer)
         addSource(data, observer)
     }
 
-    override fun removeObserver(observer: Observer<MutableList<MidiDeviceInfo>>) {
+    override fun removeObserver(observer: Observer<List<MidiDeviceInfo>>) {
         super.removeObserver(observer)
         if (!hasObservers()) {
             removeSource(data)
@@ -45,14 +45,14 @@ class MidiDeviceMonitor internal constructor(
         override fun onDeviceAdded(device: MidiDeviceInfo?) {
             super.onDeviceAdded(device)
             device?.also {
-                data.value?.add(it)
+                data.add(it)
             }
         }
 
         override fun onDeviceRemoved(device: MidiDeviceInfo?) {
             super.onDeviceRemoved(device)
             device?.also {
-                data.value?.remove(it)
+                data.remove(it)
             }
         }
     }
