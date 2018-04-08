@@ -37,13 +37,16 @@ class ThingsActivity : Activity() {
     private fun startMidi() {
         log("onCreate")
         (getSystemService(Context.MIDI_SERVICE) as MidiManager).run {
-            midiController.open(
-                    devices.first {
-                        it.inputPortCount > 0
-                    }
-            )
+            if (!devices.isEmpty()) {
+                midiController.open(
+                        devices.first { it.inputPortCount > 0 }
+                )
+                this@ThingsActivity.log("Opening ${devices.first()}.toString()$")
+                midiControls.onStart()
+            } else {
+                log("No MIDI devices")
+            }
         }
-        midiControls.onStart()
     }
 
     override fun onDestroy() {
