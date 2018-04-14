@@ -7,6 +7,7 @@ import android.os.Bundle
 import android.util.Log
 import android.view.KeyEvent
 import android.widget.ScrollView
+import com.tomaszrykala.midi.BaseMidiController
 import com.tomaszrykala.midionandroid.control.MidiControls
 import com.tomaszrykala.midionandroid.midi.MidiController
 import kotlinx.android.synthetic.main.activity_main.*
@@ -18,7 +19,7 @@ class ThingsActivity : Activity() {
     }
 
     private val midiController: MidiController by lazy {
-        MidiController(this)
+        MidiController(BaseMidiController(getSystemService(Context.MIDI_SERVICE) as MidiManager))
     }
     private val midiControls: MidiControls by lazy {
         MidiControls(midiController)
@@ -30,21 +31,22 @@ class ThingsActivity : Activity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
         scrollView = findViewById(R.id.outputScrollView)
-
+        log("onCreate")
         startMidi()
     }
 
     private fun startMidi() {
-        log("onCreate")
-        (getSystemService(Context.MIDI_SERVICE) as MidiManager).run {
-            if (!devices.isEmpty()) {
-                midiController.open(
-                        devices.first { it.inputPortCount > 0 }
-                )
-                this@ThingsActivity.log("Opening ${devices.first()}.toString()$")
-                midiControls.onStart()
-            } else {
-                log("No MIDI devices")
+        (getSystemService(Context.MIDI_SERVICE) as MidiManager?).run {
+            this?.run {
+                if (!devices.isEmpty()) {
+                    midiController.open(
+                            devices.first { it.inputPortCount > 0 }
+                    )
+                    this@ThingsActivity.log("Opening ${devices.first()}.toString()$")
+                    midiControls.onStart()
+                } else {
+                    log("No MIDI devices")
+                }
             }
         }
     }

@@ -24,7 +24,6 @@ import kotlinx.android.synthetic.main.mixer_deck_1.*
 
 class MainActivity : AppCompatActivity() {
 
-    private var midiManager: MidiManager? = null
     private var adapterPosition: Int = 0
     private val deviceAdapter: DeviceAdapter by lazy {
         DeviceAdapter(this, { it.inputPortCount > 0 })
@@ -51,8 +50,7 @@ class MainActivity : AppCompatActivity() {
         applicationContext?.let {
             it.packageManager?.let {
                 if (it.hasSystemFeature(PackageManager.FEATURE_MIDI)) {
-                    midiManager = getSystemService(Context.MIDI_SERVICE) as MidiManager?
-                    midiManager?.run {
+                    (getSystemService(Context.MIDI_SERVICE) as MidiManager?)?.run {
                         openMidiControls()
                         observeDevices()
                     }
