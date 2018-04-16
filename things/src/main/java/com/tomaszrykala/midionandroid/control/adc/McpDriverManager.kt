@@ -11,7 +11,7 @@ class McpDriverManager(private val midiEventListener: MidiEventListener, driver:
         const val mixerAdcStartChannel = 10
     }
 
-    private val keys = Keys.Octave0.Key.values()
+    private val keys = Keys.octave4.all()
 
     private val mixerMcpDriver: McpDriver = McpDriver(driver.getSpio0(), driver.getSclk(), driver.getMosi(), driver.getMiso())
     private val mixerMidiPots: MutableList<MidiThingsPot> = mutableListOf()
@@ -19,7 +19,7 @@ class McpDriverManager(private val midiEventListener: MidiEventListener, driver:
     fun start() {
         mixerMcpDriver.start()
         (0 until keys.size).mapTo(mixerMidiPots) {
-            MidiThingsPot(midiEventListener, (mixerAdcStartChannel).toByte(), keys[it].pitch.toByte(),
+            MidiThingsPot(midiEventListener, (mixerAdcStartChannel).toByte(), keys[it].toByte(),
                     mixerMcpDriver, it).apply { start() }
         }
     }

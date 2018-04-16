@@ -10,7 +10,7 @@ import android.util.Log
 class BaseMidiController(private val midiManager: MidiManager) {
 
     companion object {
-        const val TAG: String = "MidiController"
+        const val TAG: String = "BaseMidiController"
     }
 
     private var midiInputPort: MidiInputPort? = null

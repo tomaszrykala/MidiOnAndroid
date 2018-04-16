@@ -14,7 +14,7 @@ import com.triggertrap.seekarc.SeekArc
 
 class MidiControlsManager(val midiController: MidiController) {
 
-    private val keys = Keys.Octave0.Key.values()
+    private val keys = Keys.octave4.all()
     private val midiPots: MutableList<MidiPot> = mutableListOf()
     private val midiButtons: MutableList<MidiButton> = mutableListOf()
 
@@ -68,7 +68,7 @@ class MidiControlsManager(val midiController: MidiController) {
     private fun initMidiPots(seekArcs: List<SeekArc>, seekBars: List<SeekBar>) {
         var index = 0
         seekArcs.forEach {
-            MidiPot(midiEventListener, midiPotsChannel, keys[index].pitch.toByte()).apply {
+            MidiPot(midiEventListener, midiPotsChannel, keys[index].toByte()).apply {
                 it.setOnSeekArcChangeListener(object : MidiPotListener() {
                     override fun onProgressChanged(seekBar: SeekBar?, progress: Int, fromUser: Boolean) {}
                     override fun onProgressChanged(p0: SeekArc?, progress: Int, p2: Boolean) {
@@ -80,7 +80,7 @@ class MidiControlsManager(val midiController: MidiController) {
             index++
         }
         seekBars.forEach {
-            MidiPot(midiEventListener, midiPotsChannel, keys[index].pitch.toByte()).apply {
+            MidiPot(midiEventListener, midiPotsChannel, keys[index].toByte()).apply {
                 it.setOnSeekBarChangeListener(
                         object : SeekBar.OnSeekBarChangeListener {
                             override fun onStartTrackingTouch(seekBar: SeekBar?) {} // no-op

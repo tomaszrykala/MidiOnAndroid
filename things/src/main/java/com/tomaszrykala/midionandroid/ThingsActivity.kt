@@ -15,7 +15,7 @@ import kotlinx.android.synthetic.main.activity_main.*
 class ThingsActivity : Activity() {
 
     companion object {
-        val TAG = ThingsActivity::class.java.simpleName + "_THINGS"
+        const val TAG = "ThingsActivity"
     }
 
     private val midiController: MidiController by lazy {
@@ -81,5 +81,4 @@ class ThingsActivity : Activity() {
                 .filter { keyCode == it.keyCode }
                 .forEach { midiController.onNote(it, pressed) }
     }
-
 }
