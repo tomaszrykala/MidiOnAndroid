@@ -18,8 +18,10 @@ class ThingsActivity : Activity() {
         const val TAG = "ThingsActivity"
     }
 
+    private lateinit var midiManager: MidiManager
+
     private val midiController: MidiController by lazy {
-        MidiController(BaseMidiController(getSystemService(Context.MIDI_SERVICE) as MidiManager))
+        MidiController(BaseMidiController(midiManager))
     }
     private val midiControls: MidiControls by lazy {
         MidiControls(midiController)
@@ -38,12 +40,13 @@ class ThingsActivity : Activity() {
     private fun startMidi() {
         (getSystemService(Context.MIDI_SERVICE) as MidiManager?).run {
             this?.run {
+                midiManager = this
                 if (!devices.isEmpty()) {
-                    midiController.open(
-                            devices.first { it.inputPortCount > 0 }
-                    )
-                    this@ThingsActivity.log("Opening ${devices.first()}.toString()$")
-                    midiControls.onStart()
+                    devices.first { it.inputPortCount > 0 }.let {
+                        midiController.open(it)
+                        midiControls.onStart()
+                        this@ThingsActivity.log("Opening $it")
+                    }
                 } else {
                     log("No MIDI devices")
                 }
